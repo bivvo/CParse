@@ -24,6 +24,22 @@ namespace CParse
         public frmCParse()
 		{
 			InitializeComponent();
+            LoadSettings();
+        }
+
+        private void LoadSettings()
+        {
+            if(!string.IsNullOrEmpty(Properties.Settings.Default.layoutPath))
+            {
+                tbLayout.Text = Properties.Settings.Default.layoutPath;
+            }
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.dataPath))
+            {
+                tbData.Text = Properties.Settings.Default.dataPath;
+            }
+            cbLineBuffer.Checked = Properties.Settings.Default.rowBuffer;
+            cbShowData.Checked = Properties.Settings.Default.showLayout;
+
         }
         #endregion
 
@@ -75,13 +91,24 @@ namespace CParse
 			btnGo.Enabled = true;
 			btnLayout.Enabled = true;
 			tbLayout.Enabled = true;
-		}
+            saveSettings();
+            
+        }
+
+        private void saveSettings()
+        {
+            Properties.Settings.Default.showLayout = cbShowData.Checked;
+            Properties.Settings.Default.rowBuffer = cbLineBuffer.Checked;
+            Properties.Settings.Default.dataPath = tbData.Text;
+            Properties.Settings.Default.layoutPath = tbLayout.Text;
+            Properties.Settings.Default.Save();
+        }
 
         /// <summary>
         /// Layout textbox value changed event handler.
         /// </summary>
-		private void tbLayout_TextChanged(object sender, EventArgs e)
-		{
+        private void tbLayout_TextChanged(object sender, EventArgs e)
+		{   
 			CheckForGo();
 		}
 
@@ -100,8 +127,10 @@ namespace CParse
         /// <param name="e"></param>
 		private void btnData_Click(object sender, EventArgs e)
 		{
-			if (ofdData.ShowDialog(this) == DialogResult.OK)
-				tbData.Text = ofdData.FileName;
+            if (ofdData.ShowDialog(this) == DialogResult.OK)
+            {
+                tbData.Text = ofdData.FileName;
+            }
 		}
         #endregion
 
